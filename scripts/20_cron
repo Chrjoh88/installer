@@ -24,4 +24,5 @@ function f_cron {
     echo
   fi
 
-  ((i+
+  ((i++))
+}
