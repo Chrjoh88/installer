@@ -1,0 +1,141 @@
+= Hardening Ubuntu. Systemd edition.
+:icons: font
+
+A quick way to make a Ubuntu server a bit more secure.
+
+NOTE: This is a constant work in progress. Make sure you understand what it does. Read the code.
+
+== Howto
+Start the installation of the server. +
+Pick language, keyboard layout, timezone and so on as you usually would.
+
+=== Partition the system
+[source,shell]
+----
+/
+/boot (rw)
+/home (rw,nosuid,nodev)
+swap
+/var
+/var/log (rw,nosuid,nodev,noexec)
+/var/log/audit (rw,nosuid,nodev,noexec)
+----
+
+Note that `/tmp` and `/var/tmp` will be added automatically by the script.
+
+=== Login, set a Grub2 password, configure and run ubuntu.sh
+Do not add any packages. +
+Log in. +
+Select a Grub2 password (using `grub-mkpasswd-pbkdf2`). +
+Download the script using `git clone https://github.com/konstruktoid/hardening.git`. + 
+Change the configuration options in the `ubuntu.cfg` file and last but not least run the script, `sudo bash ubuntu.sh`. +
+
+== Configuration options
+[source,shell]
+----
+SSH_GRPS='sudo' // <1>
+SYSCTL_CONF='https://raw.githubusercontent.com/Chrjoh88/installer/master/misc/sysctl.conff' // <2>
+AUDITD_RULES='https://raw.githubusercontent.com/Chrjoh88/installer/master/misc/audit.rules' // <3>
+LOGROTATE_CONF='https://raw.githubusercontent.com/Chrjoh88/installer/misc/logrotate.conf' // <4>
+NTPSERVERPOOL='0.ubuntu.pool.ntp.org 1.ubuntu.pool.ntp.org 2.ubuntu.pool.ntp.org 3.ubuntu.pool.ntp.org pool.ntp.org' // <5>
+VERBOSE='N' // <7>
+CHANGEME='' // <8>
+
+# Configuration files
+ADDUSER='/etc/adduser.conf'
+AUDITDCONF='/etc/audit/auditd.conf'
+AUDITRULES='/etc/audit/rules.d/hardening.rules'
+COMMONPASSWD='/etc/pam.d/common-password'
+COMMONACCOUNT='/etc/pam.d/common-account'
+COMMONAUTH='/etc/pam.d/common-auth'
+DEFAULTGRUB='/etc/default/grub'
+DISABLEMNT='/etc/modprobe.d/disablemnt.conf'
+DISABLEMOD='/etc/modprobe.d/disablemod.conf'
+DISABLENET='/etc/modprobe.d/disablenet.conf'
+JOURNALDCONF='/etc/systemd/journald.conf'
+LIMITSCONF='/etc/security/limits.conf'
+LOGINDCONF='/etc/systemd/logind.conf'
+LOGINDEFS='/etc/login.defs'
+LOGROTATE='/etc/logrotate.conf'
+PAMLOGIN='/etc/pam.d/login'
+RESOLVEDCONF='/etc/systemd/resolved.conf'
+RKHUNTERCONF='/etc/default/rkhunter'
+SECURITYACCESS='/etc/security/access.conf'
+SSHDFILE='/etc/ssh/sshd_config'
+SYSCTL='/etc/sysctl.conf'
+SYSTEMCONF='/etc/systemd/system.conf'
+TIMESYNCD='/etc/systemd/timesyncd.conf'
+UFWDEFAULT='/etc/default/ufw'
+USERADD='/etc/default/useradd'
+USERCONF='/etc/systemd/user.conf'
+----
+<1> The IP addresses that will be able to connect with SSH.
+<2> Which group the users have to be member of in order to acess via SSH.
+<3> Stricter sysctl settings.
+<4> Auditd rules.
+<5> Logrotate settings.
+<6> NTP server pool.
+<7> If you want all the details or not.
+<8> Add something just to verify that you actually glanced the code.
+
+=== Function list
+`pre` Script setup +
+`disablenet` Disable misc network protocols +
+`disablemnt` Disable misc file systems +
+`disablemod` Disable misc kernel modules +
+`resolvedconf` Systemd/resolved.conf +
+`systemdconf` Systemd/system.conf and Systemd/user.conf +
+`journalctl` Systemd/journald.conf and logrotate.conf +
+`timesyncd` Systemd/timesyncd.conf +
+`coredump` Systemd/coredump.conf +
+`fstab` /etc/fstab, system/tmp.mount and system/var-tmp.mount +
+`prelink` Prelink +
+`aptget` Updating the package index and upgrading installed packages +
+`hosts` /etc/hosts.allow and /etc/hosts.deny +
+`issue` Add message to /etc/issue, /etc/issue.net, /etc/motd +
+`logindefs` /etc/login.defs +
+`logindconf` Systemd/logind.conf +
+`sysctl` /etc/sysctl.conf +
+`limitsconf` /etc/security/limits.conf +
+`adduser` /etc/adduser.conf and /etc/default/useradd +
+`rootaccess` /etc/security/access.conf and /etc/securetty +
+`packages` Installing base packages +
+`apport` Disable apport +
+`rkhunter` Configures rkhunter +
+`sshdconfig` /etc/ssh/sshd_config +
+`password` /etc/pam.d/common-password and /etc/pam.d/common-auth +
+`cron` /etc/cron and /etc/at +
+`ctrlaltdel` Ctrl-alt-delete +
+`auditd` Auditd +
+`aide` Aide +
+`rhosts` .rhosts +
+`users` Remove users +
+`lockroot` Lock root user account +
+`aptget_clean` Remove unused packages +
+`suid` Remove suid bits +
+`umask` Set umask +
+`path` Modify paths +
+`aa_enforce` Enforce apparmor profiles +
+`aide_post` Create Aide db +
+`aide_timer` Enable daily Aide check +
+`systemddelta` systemd-delta +
+`checkreboot` Check if reboot is required
+
+== Tests
+There are approximately 275 https://github.com/sstephenson/bats[Bats tests] for most of the above settings available in the link:tests/[tests directory].
+[source,shell]
+----
+git clone https://github.com/Chrjoh88/installer.git
+cd tests/
+sudo bats .
+----
+
+== Ansible
+If you're using Ansible, a playbook with most of the above functions implemented is available in my Ansible repository https://github.com/konstruktoid/Ansible[konstruktoid/Ansible].
+
+== Recommended reading
+https://benchmarks.cisecurity.org/downloads/show-single/index.cfm?file=independentlinux.100[CIS Distribution Independent Linux Benchmark v1.0.0] +
+http://iase.disa.mil/stigs/os/unix-linux/Pages/index.aspx[Draft Red Hat 7 STIG Version 1, Release 0.1] +
+https://benchmarks.cisecurity.org/downloads/show-single/?file=ubuntu1404.100[CIS Ubuntu 14.04 LTS Server Benchmark v1.0.0] +
+https://wiki.ubuntu.com/Security/Features +
+https://help.ubuntu.com/community/StricterDefaults +
