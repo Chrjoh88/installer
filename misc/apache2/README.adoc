@@ -1,6 +1,7 @@
 Location of the confs
 ----
-etc/apache2/sites-available/default-ssl.conf
-etc/apache2/mods-available/ssl.conf
-etc/apache2/conf-available/security.conf
+/etc/apache2/apache2.conf
+/etc/apache2/sites-available/default-ssl.conf
+/etc/apache2/mods-available/ssl.conf
+/etc/apache2/conf-available/security.conf
 ----
