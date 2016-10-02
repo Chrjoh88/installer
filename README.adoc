@@ -102,7 +102,7 @@ USERCONF='/etc/systemd/user.conf'
 `rootaccess` /etc/security/access.conf and /etc/securetty +
 `packages` Installing base packages +
 `apport` Disable apport +
-`rkhunter` Configures rkhunter +
+`rkhunter` Configures rkhunter and chkrootkit +
 `sshdconfig` /etc/ssh/sshd_config +
 `password` /etc/pam.d/common-password and /etc/pam.d/common-auth +
 `cron` /etc/cron and /etc/at +
