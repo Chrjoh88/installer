@@ -6,7 +6,7 @@ function f_rkhunter {
 
   
   sed -i 's/^RUN_DAILY="false"/RUN_DAILY="true"/' "$CHKROOTCONF"
-  sed -i 's/^DIFF_MODE="false/DIFF_MODE="true"/' "$CHKROOTCONF"
+  sed -i 's/^DIFF_MODE="false"/DIFF_MODE="true"/' "$CHKROOTCONF"
   rkhunter --propupd
   chkrootkit -V
   sudo rkhunter --update
