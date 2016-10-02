@@ -1,0 +1,7 @@
+#Reverse lookup examples
+last  | tac
+pinky | tac
+who   | tac
+#Reverse lookup in ssh
+usedns yes to log every instance
+
