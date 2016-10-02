@@ -1,0 +1,7 @@
+function f_logwatch {
+  echo "[$i] Logwatch settings"
+
+  sed -i 's/^*Detail = Low/Detail = High/' "$LOGWATCH"
+
+  ((i++))
+}
