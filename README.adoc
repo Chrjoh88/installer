@@ -20,7 +20,8 @@ swap
 /var/log (rw,nosuid,nodev,noexec)
 /var/log/audit (rw,nosuid,nodev,noexec)
 
-#If using LVM
+#If using LVM /etc/default/grub
+
 GRUB_CMDLINE_LINUX_DEFAULT="quiet splash" to 
 GRUB_CMDLINE_LINUX_DEFAULT="nomodeset"
 GRUB_TERMINAL_INPUT="console serial"
