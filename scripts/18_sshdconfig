@@ -54,6 +54,8 @@ function f_sshdconfig {
 
   if ! grep -q "UseDNS" "$SSHDFILE" 2> /dev/null; then
     echo "UseDNS yes" >> "$SSHDFILE"
+    echo "#Disable reverse DNS lookup" >> $SSHDFILE"
+    echo "GSSAPIAuthentication no" >> $SSHDFILE"
   fi
 
   systemctl restart sshd.service
