@@ -4,7 +4,7 @@ function f_umask {
   sed -i 's/umask 022/umask 027/g' /etc/init.d/rc
 
   if ! grep -q -i "umask" "/etc/profile" 2> /dev/null; then
-    echo "umask 077" >> /etc/profile
+    echo "umask 027" >> /etc/profile
   fi
 
   if ! grep -q -i "umask" "/etc/bash.bashrc" 2> /dev/null; then
