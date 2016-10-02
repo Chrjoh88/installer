@@ -1,12 +1,5 @@
 todo
 
----
-chkrootkit
-sed /etc/chkrootkit.config
-RUN_DAILY="true"
-RUN_DAILY_OPTS="-q"
-DIFF_MODE="true"
----
 
 ---
 apt-get install --no-install-recommends checksecurity
