@@ -5,3 +5,7 @@ who   | tac
 #Reverse lookup in ssh
 usedns yes to log every instance
 
+usermode in script
+
+usermod -aG sudo
+
