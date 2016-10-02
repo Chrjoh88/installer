@@ -6,7 +6,9 @@ function f_rkhunter {
 
   
   sed -i 's/^RUN_DAILY=_*/RUN_DAILY="true"/ "$CHKROOTCONF"
+  sed -i 's/^DIFF_MODE=_*/DIFF_MODE="true"/ "$CHKROOTCONF"
   rkhunter --propupd
+  chkrootkit -V
 
   ((i++))
 }
