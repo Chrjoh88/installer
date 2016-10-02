@@ -26,6 +26,10 @@ GRUB_CMDLINE_LINUX_DEFAULT="quiet splash" to
 GRUB_CMDLINE_LINUX_DEFAULT="nomodeset"
 GRUB_TERMINAL_INPUT="console serial"
 sudo update-grub
+
+
+Install
+curl and wget to be sure scripts running fine
 ----
 
 Note that `/tmp` and `/var/tmp` will be added automatically by the script.
