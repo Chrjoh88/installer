@@ -33,11 +33,12 @@ Change the configuration options in the `ubuntu.cfg` file and last but not least
 == Configuration options
 [source,shell]
 ----
-SSH_GRPS='sudo' // <1>
-SYSCTL_CONF='https://raw.githubusercontent.com/Chrjoh88/installer/master/misc/sysctl.conff' // <2>
-AUDITD_RULES='https://raw.githubusercontent.com/Chrjoh88/installer/master/misc/audit.rules' // <3>
-LOGROTATE_CONF='https://raw.githubusercontent.com/Chrjoh88/installer/misc/logrotate.conf' // <4>
-NTPSERVERPOOL='0.ubuntu.pool.ntp.org 1.ubuntu.pool.ntp.org 2.ubuntu.pool.ntp.org 3.ubuntu.pool.ntp.org pool.ntp.org' // <5>
+FW_ADMIN='127.0.0.1' (1)
+SSH_GRPS='sudo' // <2>
+SYSCTL_CONF='https://raw.githubusercontent.com/Chrjoh88/installer/master/misc/sysctl.conff' // <3>
+AUDITD_RULES='https://raw.githubusercontent.com/Chrjoh88/installer/master/misc/audit.rules' // <4>
+LOGROTATE_CONF='https://raw.githubusercontent.com/Chrjoh88/installer/misc/logrotate.conf' // <5>
+NTPSERVERPOOL='0.ubuntu.pool.ntp.org 1.ubuntu.pool.ntp.org 2.ubuntu.pool.ntp.org 3.ubuntu.pool.ntp.org pool.ntp.org' // <6>
 VERBOSE='N' // <7>
 CHANGEME='' // <8>
 
