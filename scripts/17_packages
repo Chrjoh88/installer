@@ -9,7 +9,7 @@ function f_packages {
     VM="virtualbox-guest-dkms virtualbox-guest-utils"
   fi
 
-  PACKAGES="acct aide-common apparmor-profiles apparmor-utils auditd debsums haveged libpam-cracklib libpam-tmpdir openssh-server chkrootkit rkhunter $VM"
+  PACKAGES="acct apport aide-common apparmor-profiles apparmor-utils auditd debsums haveged libpam-cracklib libpam-tmpdir openssh-server chkrootkit rkhunter $VM"
 
   for deb in $PACKAGES; do
        $APT install --no-install-recommends "$deb"
