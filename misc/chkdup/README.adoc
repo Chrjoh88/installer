@@ -1,0 +1,35 @@
+Requirements:
+
+PHP.
+Sudo.
+
+Installation:
+
+Open the terminal.
+To install PHP if you don't have it, type: sudo apt-get install php5 php5-cli.
+Download the chkdup.
+Extract the file anywhere you like.
+Type: sudo sh install.sh.
+Uninstall:
+
+Open the terminal.
+Go to the path you extracted the tool in.
+Type: sudo sh uninstall.sh.
+How to use it:
+Just open the terminal and type sudo chkdup.
+
+FAQs:
+
+What does the install.sh do ?
+
+The installer will move the chkdup.php to /opt/ then will create a symbolic link in /usr/bin/.
+What about the uninstall.sh ?
+
+The uninstaller will remove the following files:
+install.sh
+/opt/chkdup.php
+/usr/bin/chkdup
+itself "uninstall.sh"
+Is it safe to use chkdup ?
+
+Yes it is, since it takes a backup of the current sources.list before attempting to do anything. But I'm not responsible if anything happened. The full responsibility will be yours.
