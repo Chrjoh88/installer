@@ -1,0 +1,642 @@
+#!/usr/bin/python
+#
+# 2016-09-30 Edit Christain CJ Johansson
+#
+# add raw_input('Press enter to continue') to files that need write
+#
+import os
+import sys, traceback, subprocess
+def main():
+	try:
+		print ('''
+ /$$$$$$$  /$$                     /$$        /$$$$$$
+| $$__  $$| $$                    | $$       /$$__  $$
+| $$  \ $$| $$  /$$$$$$   /$$$$$$$| $$   /$$| $$  \__//$$   /$$  /$$$$$$   /$$$$$$
+| $$$$$$$ | $$ |____  $$ /$$_____/| $$  /$$/| $$$$   | $$  | $$ /$$__  $$ /$$__  $$
+\033[1;36m| $$__  $$| $$  /$$$$$$$| $$      | $$$$$$/ | $$_/   | $$  | $$| $$  \__/| $$$$$$$$
+| $$  \ $$| $$ /$$__  $$| $$      | $$_  $$ | $$     | $$  | $$| $$      | $$_____/
+| $$$$$$$/| $$|  $$$$$$$|  $$$$$$$| $$ \  $$| $$     |  $$$$$$$| $$      |  $$$$$$$
+|_______/ |__/ \_______/ \_______/|__/  \__/|__/      \____  $$|__/       \_______/V1.1
+\033[1;32m Author: CJ | Homepage: www.blackfyre.se\033[1;m              \033[1;36m/$$  | $$
+                                                     |  $$$$$$/
+                                                      \______/\033[1;m
+\033[1;91m[W] Before updating your system , please contact sysadmin to avoid any kind of problem .\033[1;m
+''')
+		def inicio1():
+			while True:
+				print ('''
+1) Install important tools
+2) View Categories commands
+3) Help
+					''')
+
+				opcion0 = raw_input("\033[1;36mBlackfyre > \033[1;m")
+				while opcion0 == "1":
+					print ('''
+ 1) Install 	Virtualmin
+ 2) Add Lynis 	Auditor
+ 3) Add Tiger 	Auditor
+ 4) PSAD 	Audtor
+ 5) Tripwire 	Auditor
+ 6) OSSEC 	Auditor
+ 7) iptables	Persistent
+ 8) Message of the day info
+ 9) Denyhosts
+ 10) Update APT
+ 11) Remove lynis repositories
+ 12) Remove OSSEC repositories
+ 13) View the contents of sources.list file
+ 20 OSSEC packed install
+ 					''')
+
+					repo = raw_input("\033[1;32mWhat do you want to do ?> \033[1;m")
+					if repo == "1":
+						cmd = os.system("wget http://software.virtualmin.com/gpl/scripts/install.sh && sudo /bin/sh install.sh")
+					elif repo == "2":
+						cmd1 = os.system("apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C80E383C3DE9F082E01391A0366C67DE91CA5D5F")
+						cmd2 = os.system("echo '# Lynis | Added by Blackfyre.installer\ndeb https://packages.cisofy.com/community/lynis/deb/ xenial main' >> /etc/apt/sources.list")
+						cmd3 = os.system("sudo apt install apt-transport-https")
+						cmd4 = os.system("sudo apt install lynis")
+						cmd5 = os.system("sudo mkdir /var/log/lynis")
+						cmd6 = os.system("wget https://raw.githubusercontent.com/Chrjoh88/ubuntu/master/etc/cron.daily/lynis -P /etc/cron.daily/lynis")
+						cmd7 = os.system("sudo chmod +x /etc/cron.daily/lynis")
+					elif repo == "3":
+						cmd = os.system("sudo apt install tiger")
+					elif repo == "4":
+						cmd = os.system("sudo apt install psad")
+						cmd = os.system("echo adding iptables LOG")
+						cmd = os.system("sudo iptables -A INPUT -j LOG")
+						cmd = os.system("sudo ip6tables -A INPUT -j LOG")
+						cmd = os.system("sudo iptables -A FORWARD -j LOG")
+						cmd = os.system("sudo ip6tables -A FORWARD -j LOG")
+						cmd = os.system("sudo nano /etc/psad/psad.conf")
+					elif repo == "5":
+						cmd = os.system("sudo apt install tripwire")
+						cmd = os.system("sudo twadmin --create-polfile /etc/tripwire/twpol.txt")
+						cmd = os.system("sudo tripwire --init")
+						cmd = os.system("echo sudo nano /etc/tripwire/twpol.txt")
+						cmd = os.system("echo sudo twadmin -m P /etc/tripwire/twpol.txt")
+						cmd = os.system("echo sudo sh -c 'twadmin --print-polfile > /etc/tripwire/twpol.txt'")
+						cmd = os.system("echo sudo tripwire --check --interactive")
+					elif repo == "6":
+						cmd1 = os.system("apt-key adv --fetch-keys http://ossec.wazuh.com/repos/apt/conf/ossec-key.gpg.key")
+                                                cmd2 = os.system("echo '# OSSEC | Added by Blackfyre.installer\ndeb http://ossec.wazuh.com/repos/apt/ubuntu xenial main' >> /etc/apt/sources.list")
+                                                cmd3 = os.system("sudo apt-get install ossec-hids")
+					elif repo == "7":
+						cmd = os.system("sudo apt install iptables-persistent")
+					elif repo == "8":
+						cmd = os.system("sudo apt install landscape-common update-notifier-common update-motd")
+					elif repo == "9":
+						cmd = os.system("wget https://raw.githubusercontent.com/Chrjoh88/ubuntu/master/usr/local/bin/denyhosts_unban -P /usr/sbin/")
+						cmd = os.system("sudo chmod +x /usr/sbin/denyhosts_unban")
+					elif repo == "10":
+						cmd3 = os.system("apt-get update -m")
+					elif repo == "11":
+						infile = "/etc/apt/sources.list"
+						outfile = "/etc/apt/sources.list"
+						delete_list = ["# Lynis | Added by Blackfyre.installer\n", "deb https://packages.cisofy.com/community/lynis/deb/ xenial main'\n"]
+						fin = open(infile)
+						os.remove("/etc/apt/sources.list")
+						fout = open(outfile, "w+")
+						for line in fin:
+						    for word in delete_list:
+						        line = line.replace(word, "")
+						    fout.write(line)
+						fin.close()
+						fout.close()
+						print ("\033[1;31m\nOSSEC linux repositories have been deleted !\n\033[1;m")
+ 					elif repo == "12":
+                                                infile = "/etc/apt/sources.list"
+                                                outfile = "/etc/apt/sources.list"
+                                                delete_list = ["# OSSEC | Added by Blackfyre.installer\n", "deb http://ossec.wazuh.com/repos/apt/ubuntu xenial main'\n"]
+                                                fin = open(infile)
+                                                os.remove("/etc/apt/sources.list")
+                                                fout = open(outfile, "w+")
+                                                for line in fin:
+                                                    for word in delete_list:
+                                                        line = line.replace(word, "")
+                                                    fout.write(line)
+                                                fin.close()
+                                                fout.close()
+                                                print ("\033[1;31m\nLynis linux repositories have been deleted !\n\033[1;m")
+					elif repo == "20":
+						cmd1 = os.system("wget https://bintray.com/artifact/download/ossec/ossec-hids/ossec-hids-2.8.3.tar.gz -P /tmp/ossec/")
+						cmd2 = os.system("tar -zxf /tmp/ossec/ossec-hids-2.8.3.tar.gz -C /tmp/ossec")
+						cmd3 = os.system("cd /tmp/ossec/ossec-hids-2.8.3")
+						cmd4 = os.system("/tmp/ossec/ossec-hids-2.8.3/install.sh")
+					elif repo == "back":
+						inicio1()
+					elif repo == "gohome":
+						inicio1()
+					elif repo == "13":
+						file = open('/etc/apt/sources.list', 'r')
+
+						print (file.read())
+
+					else:
+						print ("\033[1;31mSorry, that was an invalid command!\033[1;m")
+
+				if opcion0 == "3":
+					print ('''
+****************** +Commands+ ******************
+\033[1;32mback\033[1;m		\033[1;33mGo back\033[1;m
+\033[1;32mgohome\033[1;m		\033[1;33mGo to the main menu\033[1;m
+
+SSH access needs admin
+sudo usermod -a -G  <group> <username>
+		''')
+
+				def inicio():
+					while opcion0 == "2":
+						print ('''
+\033[1;36m**************************** All Categories *****************************\033[1;m
+1) System information
+2) Sysadmin
+3) Hardening system
+4) Scripts
+5) Tests
+
+			 ''')
+						opcion1 = raw_input("\033[1;36mBlackfyre > \033[1;m")
+						if opcion1 == "back":
+							inicio1()
+						elif opcion1 == "gohome":
+							inicio1()
+						elif opcion1 == "0":
+							cmd = os.system("")
+						while opcion1 == "1":
+							print ('''
+\033[1;36m***************************** System information *****************************\033[1;m
+ 1) Get info about host such as dns, IP, and hostname	11) NULL
+ 2) Network inferface and routing info			12) NULL
+ 3) Who is online, list of last logged in user		13) NULL
+ 4) Operating system info				14) NULL
+ 5) Show what dpkg installed with page [w] Q to quit	15) NULL
+ 6) NULL						16) NULL
+ 7) NULL						17) NULL
+ 8) NULL						18) NULL
+ 9) NULL						19) NULL
+10) NULL						20) NULL
+
+						''')
+							print ("\033[1;32m Select a category to get system information .\n\033[1;m")
+							opcion2 = raw_input("\033[1;36mBlackfyre > \033[1;m")
+							if opcion2 == "1":
+								print("\033[1;32m----------------------------------------------------------------\n"
+  												"Hostname and DNS information\n"
+	                                       			      "---------------------------------------------------------------\033[1;m")
+								status = os.system("echo Hostname:	 		$(hostname -s)")
+								status = os.system("echo DNS domain: 	 		$(hostname -d)")
+								status = os.system("echo Fully qualified domain name :  $(hostname -f)")
+								status = os.system("echo Network address IP: 		$(hostname -i)")
+								status = os.system("echo External adress IP $(wget -qO- http://ipecho.net/plain)")
+								print ("DNS name servers:")
+								status = os.system("cat /etc/resolv.conf | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' ")
+							elif opcion2 =="2":
+                                                                print("\033[1;32m---------------------------------------------------------------\n"
+                                                                                                "Network information\n"
+                                                                      "----------------------------------------------------------------\033[1;m")
+								status = os.system("ip -4 address show")
+								print("\033[1;32m----------------------------------------------------------------\n"
+                                                                                                "Network routing\n"
+                                                                      "----------------------------------------------------------------\033[1;m")
+								status = os.system("netstat -nr")
+								print("\033[1;32m----------------------------------------------------------------\n"
+                                                                                                "Interface traffic information\n"
+                                                                      "----------------------------------------------------------------\033[1;m")
+								status = os.system("netstat -i")
+							elif opcion2 == "3":
+								print("\033[1;32m----------------------------------------------------------------\n"
+                                                                                                "Who is online\n"
+                                                                      "----------------------------------------------------------------\033[1;m")
+								status = os.system("$cmd who")
+								print("\033[1;32m----------------------------------------------------------------\n"
+                                                                                                "List of last logged in users\n"
+                                                                      "----------------------------------------------------------------\033[1;m")
+								status = os.system("last")
+								status = os.system("lastlog")
+								status = os.system("pinky")
+							elif opcion2 == "4":
+								print("\033[1;32m----------------------------------------------------------------\n"
+                                                                                                "System information\n"
+                                                                      "----------------------------------------------------------------\033[1;m")
+								status = os.system("echo Operating system: $(uname)")
+								status = os.system("lsb_release -a")
+							elif opcion2 == "5":
+								cmd = os.system("dpkg -l | less")
+							elif opcion2 == "6":
+								cmd = os.system("")
+							elif opcion2 == "7":
+								cmd = os.system("")
+							elif opcion2 == "8":
+								cmd = os.system("")
+							elif opcion2 == "9":
+								cmd = os.system("")
+							elif opcion2 == "10":
+								cmd = os.system("")
+							elif opcion2 == "back":
+								inicio()
+							elif opcion2 == "gohome":
+								inicio1()
+							elif opcion2 == "0":
+								cmd = os.system("")
+							else:
+								print ("\033[1;31mSorry, that was an invalid command!\033[1;m")
+
+						while opcion1 == "2":
+							print ('''
+\033[1;36m***************************** System admin *****************************\033[1;m
+ 1) Check group errors			11) Grubb password
+ 2) Purge old package config		12) NULL
+ 3) Apt/update/upg/clean/autoremove	13) NULL
+ 4) Admin group				14) NULL
+ 5) NULL				15) Denyhost unban
+ 6) NULL				16) NULL
+ 7) NULL				17) NULL
+ 8) NULL				18) NULL
+ 9) NULL				19) NULL
+10) MySQL secure		        \033[1;91m20) Flush iptables\033[1;m
+						''')
+							print ("\033[1;32mInsert the number of the Security feature .\n\033[1;m")
+							opcion2 = raw_input("\033[1;36mBlackfyre > \033[1;m")
+							if opcion2 == "1":
+								cmd = os.system("grpck")
+							elif opcion2 == "2":
+								cmd = os.system("dpkg --list |grep '^rc' | cut -d ' ' -f 3 | xargs sudo dpkg --purge")
+							elif opcion2 == "3":
+								cmd1 = os.system("sudo apt update")
+								cmd2 = os.system("sudo apt upgrade")
+								cmd3 = os.system("sudo apt clean")
+								cmd4 = os.system("sudo apt autoclean")
+                                                                cmd5 = os.system("sudo apt-get -qq autoremove")
+							elif opcion2 == "4":
+								cmd1 = os.system("sudo groupadd admin")
+								cmd2 = os.system("sudo usermod -aG admin $USER")
+								cmd3 = os.system("sudo dpkg-statoverride --update --add root admin 4750 /bin/su")
+								cmd4 = os.system("ls -lh /bin/su")
+							elif opcion2 == "5":
+								cmd = os.system("")
+							elif opcion2 == "6":
+								cmd = os.system("")
+							elif opcion2 == "7":
+								cmd = os.system("")
+							elif opcion2 == "8":
+								cmd = os.system("")
+							elif opcion2 == "9":
+								cmd = os.system("")
+							elif opcion2 == "10":
+								cmd = os.system("sudo mysql_secure_installation")
+                                                        elif opcion2 == "11":
+                                                                cmd = os.system("grub-mkpasswd-pbkdf2")
+                                                        elif opcion2 == "12":
+                                                                cmd = os.system("")
+                                                        elif opcion2 == "13":
+                                                                cmd = os.system("")
+                                                        elif opcion2 == "14":
+                                                                cmd = os.system("")
+                                                        elif opcion2 == "15":
+                                                                cmd = os.system("sudo denyhosts_unban")
+                                                        elif opcion2 == "16":
+                                                                cmd = os.system("")
+                                                        elif opcion2 == "17":
+                                                                cmd = os.system("")
+                                                        elif opcion2 == "18":
+                                                                cmd = os.system("")
+                                                        elif opcion2 == "19":
+                                                                cmd = os.system("")
+                                                        elif opcion2 == "20":
+                                                                cmd = os.system("sudo iptables -P INPUT ACCEPT")
+                                                                cmd = os.system("sudo iptables -P FORWARD ACCEPT")
+                                                                cmd = os.system("sudo iptables -P OUTPUT ACCEPT")
+                                                                cmd = os.system("sudo iptables -t nat -F")
+                                                                cmd = os.system("sudo iptables -t mangle -F")
+                                                                cmd = os.system("sudo iptables -F")
+                                                                cmd = os.system("sudo iptables -X")
+							elif opcion2 == "back":
+								inicio()
+							elif opcion2 == "gohome":
+								inicio1()
+							elif opcion2 == "0":
+								cmd = os.system("")
+							else:
+								print ("\033[1;31mSorry, that was an invalid command!\033[1;m")
+
+						while opcion1 == "3":
+							print ('''
+\033[1;36m***************************** System hardening tools *****************************\033[1;m
+ 1) Patch the system.			11) Aide.conf deploy
+ 2) Install security programs.		12) Apache2 security
+ 3) Create sulog and permissons		13) Checksecurity tool
+ 4) Set some file ownership.		14) Logwatch settings High
+ 5) Set some file permissions.		15) FTPusers deny
+ 6) Enable acpid and sysstat		16) ProFTP Chroot
+ 7) Disable other system services.	17) NULL
+ 8) Postfix security patch		18) NULL
+ 9) Apache header rewrite enable.	19) NULL
+10) Systat				20) NULL
+SUDOERS FILE EDIT DISABLE FOR THE MOMENT
+						''')
+							print ("\033[1;32mInsert the number of script to install .\n\033[1;m")
+							opcion2 = raw_input("\033[1;36mBlackfyre > \033[1;m")
+							if opcion2 == "1":
+								cmd = os.system("apt-get upgrade -y")
+
+							elif opcion2 == "2":
+								cmd = os.system("apt-get install -y curl apparmor-profiles apparmor-utils debsums sysstat acct git logwatch denyhosts fail2ban libpam-cracklib libpam-tmpdir openssh-server rkhunter unattended-upgrades haveged openntpd lynx sslscan openssl-blacklist openssl-blacklist-extra")
+							elif opcion2 == "3":
+								#Create files
+								cmd = os.system("mkdir /var/log/sudo-io")
+								cmd = os.system("mkdir /etc/skel/.ssh/")
+								cmd = os.system("mkdir /var/cache/logwatch")
+								cmd = os.system("touch /var/log/sulog")
+								cmd = os.system("touch /etc/skel/.ssh/authorized_keys")
+								#Change owner and permissions for sulog
+								cmd = os.system("chown root:root /var/log/sulog")
+								cmd = os.system("chmod 0640 /var/log/sulog")
+								#Moving config and setting up fail2ban
+								cmd = os.system("sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local")
+#NOT IN USE DEV							#get some security stuff
+#								cmd = os.system("mkdir /tmp/security")
+#								cmd = os.system("wget https://raw.githubusercontent.com/virtadpt/ubuntu-hardening/master/16.04-lts/sudoers 	-P /tmp/security/")
+#								cmd = os.system("cp -rv /tmp/security/* /etc")
+							elif opcion2 == "4":
+                                                                cmd = os.system("chown root:root /etc/sudoers")
+                                                                cmd = os.system("chown -R root:root /var/spool/cron")
+                                                                cmd = os.system("chown root:syslog /var/log/sudo-io")
+							elif opcion2 == "5":
+								cmd = os.system("chmod 0400 /etc/at.allow")
+                                                                cmd = os.system("chmod 0400 /etc/cron.allow")
+                                                                cmd = os.system("chmod 0400 /etc/crontab")
+                                                                cmd = os.system("chmod 0700 /etc/skel/.ssh")
+                                                                cmd = os.system("chmod 0600 /etc/skel/.ssh/authorized_keys")
+                                                                cmd = os.system("chmod 0440 /etc/sudoers")
+                                                                cmd = os.system("chmod 0700 /var/log/sudo-io")
+							elif opcion2 == "6":
+								cmd = os.system("systemctl enable acpid")
+								cmd = os.system("systemctl enable sysstat")
+							elif opcion2 == "7":
+								cmd = os.system("systemctl disable iscsi")
+                                                                cmd = os.system("systemctl disable iscsid")
+                                                                cmd = os.system("systemctl disable mountnfs-bootclean")
+                                                                cmd = os.system("systemctl disable mountnfs")
+                                                                cmd = os.system("systemctl disable umountnfs")
+							elif opcion2 == "8":
+								cmd = os.system("echo 'smtpd_tls_ciphers = high' >> /etc/postfix/main.cf")
+                                                                cmd = os.system("echo 'smtpd_tls_exclude_ciphers = aNULL, MD5, DES, 3DES, DES-CBC3-SHA, RC4-SHA, AES256-SHA, AES128-SHA' >> /etc/postfix/main.cf")
+                                                                cmd = os.system("echo 'smtp_tls_protocols = !SSLv2, !SSLv3' >> /etc/postfix/main.cf")
+                                                                cmd = os.system("echo 'smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3' >> /etc/postfix/main.cf")
+                                                                cmd = os.system("echo 'smtp_tls_note_starttls_offer = yes' >> /etc/postfix/main.cf")
+                                                                cmd = os.system("echo 'smtpd_tls_received_header = yes' >> /etc/postfix/main.cf")
+                                                                cmd = os.system("echo '' >> /etc/postfix/main.cf")
+							elif opcion2 == "9":
+								cmd = os.system("ln -s /etc/apache2/mods-available/headers.load  /etc/apache2/mods-enabled/headers.load")
+                                                                cmd = os.system("ln -s /etc/apache2/mods-available/rewrite.load  /etc/apache2/mods-enabled/rewrite.load")
+							elif opcion2 == "10":
+								cmd = os.system("wget https://raw.githubusercontent.com/virtadpt/ubuntu-hardening/master/16.04-lts/default/sysstat -P /tmp/security ")
+								cmd = os.system("cp -rv /tmp/security/sysstat /etc/default/")
+							elif opcion2 == "11":
+								cmd = os.system("wget https://raw.githubusercontent.com/virtadpt/ubuntu-hardening/master/16.04-lts/default/aide.conf -P /tmp/security")
+								cmd = os.system("cp -rv /tmp/security/aide /etc/default/aide")
+							elif opcion2 == "12":
+								cmd = os.system("wget https://raw.githubusercontent.com/Chrjoh88/installer/master/misc/apache2/apache2.conf -P /tmp/security")
+								cmd = os.system("cp -rv /tmp/security/apache2.conf /etc/apache2")
+								cmd = os.system("wget https://raw.githubusercontent.com/Chrjoh88/installer/master/misc/apache2/default-ssl.conf -P /tmp/security")
+								cmd = os.system("cp -rv /tmp/security/default-ssl-conf /etc/apache2/sites-available/")
+								cmd = os.system("wget https://raw.githubusercontent.com/Chrjoh88/installer/master/misc/apache2/ssl.conf -P /tmp/security")
+								cmd = os.system("cp -rv /tmp/security/ssl.conf /etc/apache2/mods-available/ssl.conf")
+								cmd = os.system("wget https://raw.githubusercontent.com/Chrjoh88/installer/master/misc/apache2/security.conf -P /tmp/security")
+								cmd = os.system("cp -rv /tmp/security/security.conf /etc/apache2/conf-available/")
+							elif opcion2 == "13":
+								cmd = os.system("sudo apt-get install --no-install-recommends checksecurity")
+								cmd = os.system("sed -i 's/^#CHECKSECURITY_EMAIL=.*/CHECKSECURITY_EMAIL=root/' /etc/checksecurity.conf")
+							elif opcion2 == "14":
+								cmd = os.system("sudo apt install logwatch")
+								cmd = os.system("sudo nano /usr/share/logwatch/default.conf/logwatch.conf")
+							elif opcion2 == "15":
+								cmd1 = os.system("sudo echo '# /etc/ftpusers: list of users disallowed FTP access. See ftpusers(5).' > /etc/ftpusers ")
+								cmd2 = os.system("sudo echo 'root'  	>> /etc/ftpusers ")
+								cmd3 = os.system("sudo echo 'daemon' 	>> /etc/ftpusers ")
+                                                                cmd4 = os.system("sudo echo 'bin' 	>> /etc/ftpusers ")
+                                                                cmd5 = os.system("sudo echo 'sys' 	>> /etc/ftpusers ")
+                                                                cmd6 = os.system("sudo echo 'sync' 	>> /etc/ftpusers ")
+                                                                cmd7 = os.system("sudo echo 'games' 	>> /etc/ftpusers ")
+                                                                cmd8 = os.system("sudo echo 'man' 	>> /etc/ftpusers ")
+                                                                cmd9 = os.system("sudo echo 'lp' 	>> /etc/ftpusers ")
+                                                                cmd10 = os.system("sudo echo 'mail' 	>> /etc/ftpusers ")
+                                                                cmd11 = os.system("sudo echo 'news' 	>> /etc/ftpusers ")
+                                                                cmd12 = os.system("sudo echo 'uucp' 	>> /etc/ftpusers ")
+                                                                cmd13 = os.system("sudo echo 'nobody' 	>> /etc/ftpusers ")
+                                                                cmd14 = os.system("sudo echo 'backup' 	>> /etc/ftpusers ")
+                                                                cmd15 = os.system("sudo echo 'gnats' 	>> /etc/ftpusers ")
+                                                                cmd16 = os.system("sudo echo 'irc' 	>> /etc/ftpusers ")
+                                                                cmd17 = os.system("sudo echo 'libuuid' 	>> /etc/ftpusers ")
+                                                                cmd18 = os.system("sudo echo 'list' 	>> /etc/ftpusers ")
+                                                                cmd19 = os.system("sudo echo 'mysql' 	>> /etc/ftpusers ")
+                                                                cmd20 = os.system("sudo echo 'ntp' 	>> /etc/ftpusers ")
+                                                                cmd21 = os.system("sudo echo 'postfix' 	>> /etc/ftpusers ")
+                                                                cmd22 = os.system("sudo echo 'proxy' 	>> /etc/ftpusers ")
+                                                                cmd23 = os.system("sudo echo 'sshd' 	>> /etc/ftpusers ")
+                                                                cmd24 = os.system("sudo echo 'syslog' 	>> /etc/ftpusers ")
+                                                                cmd25 = os.system("sudo echo 'uucp' 	>> /etc/ftpusers ")
+                                                                cmd26 = os.system("sudo echo 'www-data' >> /etc/ftpusers ")
+							elif opcion2 == "16":
+								cmd = os.system("echo write DefaultRoot /home/%u at bottom of file.")
+								raw_input('Press enter to continue')
+								cmd = os.system("sudo nano /etc/proftpd/proftpd.conf")
+							elif opcion2 == "back":
+								inicio()
+							elif opcion2 == "gohome":
+								inicio1()
+							else:
+								print ("\033[1;31mSorry, that was an invalid command!\033[1;m")
+						while opcion1 == "4":
+							print ('''
+\033[1;36m***************************** System hardening scripts *****************************\033[1;m
+ 1) Install all scripts		21) Auditd
+ 2) Disablenet				22) Disablemod
+ 3) Disablemnt				23) Aide
+ 4) Systemdconf				24) Rhosts
+ 5) Journalctl				25) Users
+ 6) Timesyncd				26) Suid
+ 7) Fstab				27) Unmaks
+ 8) Prelink				28) APPArmor
+ 9) Aptget				29) Path
+10) Hosts				30) Logindconf
+11) Logindefs				31) Resolvedconf
+12) Sysctl				32) Rkhunter
+13) Limits				33) Issue
+14) Adduser				34) Apport
+15) Rootaccess				35) Lockroot
+16) Packages				36) Coredump
+17) SSHDconfig				37) Systemddelta
+18) Password				38) Reboot
+19) Cron				39) NULL
+20) Ctraltdel				40) NULL
+							''')
+							opcion2 = raw_input("\033[1;36mBlackfyre > \033[1;m")
+							if opcion2 == "1":
+								#system.conf
+								cmd = os.system("sed -i 's/^#DumpCore=.*/DumpCore=no/'				/etc/systemd/system.conf")
+								cmd = os.system("sed -i 's/^#CrashShell=.*/CrashShell=no/' 			/etc/systemd/system.conf")
+								cmd = os.system("sed -i 's/^#DefaultLimitCORE=.*/DefaultLimitCORE=0/' 		/etc/systemd/system.conf")
+                                                                cmd = os.system("sed -i 's/^#DefaultLimitNOFILE=.*/DefaultLimitNOFILE=100/' 	/etc/systemd/system.conf")
+                                                                cmd = os.system("sed -i 's/^#DefaultLimitNPROC=.*/DefaultLimitNPROC=100/' 	/etc/systemd/system.conf")
+								#user.conf
+								cmd = os.system("sed -i 's/^#DefaultLimitCORE=.*/DefaultLimitCORE=0/' 		 /etc/systemd/user.conf")
+                                                                cmd = os.system("sed -i 's/^#DefaultLimitNOFILE=.*/DefaultLimitNOFILE=100/'	 /etc/systemd/user.conf")
+                                                                cmd = os.system("sed -i 's/^#DefaultLimitNPROC=.*/DefaultLimitNPROC=100/'	 /etc/systemd/user.conf")
+								cmd = os.system("systemctl daemon-reload")
+							elif opcion2 == "2":
+								#logrotate
+								cmd = os.system("curl -s https://raw.githubusercontent.com/Chrjoh88/ubuntu/master/etc/logrotate.conf > /etc/logrotate.conf")
+								#system.conf
+								cmd = os.system("sed -i 's/^#Storage=.*/Storage=persistent/' 			/etc/systemd/journald.conf")
+								cmd = os.system("sed -i 's/^#ForwardToSyslog=.*/ForwardToSyslog=yes/' 		/etc/systemd/journald.conf")
+                                                                cmd = os.system("sed -i 's/^#Compress=.*/Compress=yes/' 			/etc/systemd/journald.conf")
+                                                                cmd = os.system("systemctl restart systemd-journald")
+                                                                cmd = os.system("")
+							elif opcion2 == "3":
+								cmd = os.system("curl -s https://raw.githubusercontent.com/Chrjoh88/ubuntu/master/etc/systemd/system/tmp.mount > /etc/systemd/system/tmp.mount")
+								cmd = os.system("sed -i '/floppy/d' /etc/fstab")
+								cmd = os.system("sed -i '/[[:space:]]\/tmp[[:space:]]/d' /etc/fstab")
+								cmd = os.system("cp /etc/systemd/system/tmp.mount /etc/systemd/system/var-tmp.mount")
+								cmd = os.system("sed -i 's/\/tmp/\/var\/tmp/g' /etc/systemd/system/var-tmp.mount")
+								cmd = os.system("ln -s /etc/systemd/system/var-tmp.mount /etc/systemd/system/default.target.wants/var-tmp.mount")
+								cmd = os.system("ln -s /etc/systemd/system/tmp.mount /etc/systemd/system/default.target.wants/tmp.mount")
+								cmd = os.system("sed -i 's/Options=.*/Options=mode=1777,strictatime,nodev,nosuid/' /etc/systemd/system/tmp.mount")
+								cmd = os.system("chmod 0644 /etc/systemd/system/tmp.mount")
+								cmd = os.system("chmod 0644 /etc/systemd/system/var-tmp.mount")
+								cmd = os.system("systemctl daemon-reload")
+							elif opcion2 == "4":
+								cmd = os.system("rm /etc/cron.deny 2> /dev/null")
+								cmd = os.system("rm /etc/at.deny 2> /dev/null")
+                                                                cmd = os.system("echo 'root' > /etc/cron.allow")
+                                                                cmd = os.system("echo 'root' > /etc/at.allow")
+                                                                cmd = os.system("chown root:root /etc/cron*")
+                                                                cmd = os.system("chmod og-rwx /etc/cron*")
+                                                                cmd = os.system("chown root:root /etc/at*")
+                                                                cmd = os.system("chmod og-rwx /etc/at*")
+                                                                cmd = os.system("systemctl mask atd.service")
+                                                                cmd = os.system("systemctl stop atd.service")
+                                                                cmd = os.system("systemctl daemon-reload")
+                                                                cmd = os.system("sed -i 's/^#cron./cron./' /etc/rsyslog.d/50-default.conf")
+                                                                cmd = os.system("systemctl status atd.service --no-pager")
+							elif opcion2 == "5":
+								cmd = os.system("systemctl mask ctrl-alt-del.target")
+							elif opcion2 == "6":
+								cmd = os.system("sed -i 's/^action_mail_acct =.*/action_mail_acct = root/' /etc/audit/auditd.conf")
+								cmd = os.system("sed -i 's/^admin_space_left_action = .*/admin_space_left_action = halt/' /etc/audit/auditd.conf")
+                                                                cmd = os.system("sed -i 's/^max_log_file_action =.*/max_log_file_action = keep_logs/' /etc/audit/auditd.conf")
+                                                                cmd = os.system("sed -i 's/^space_left_action =.*/space_left_action = email/' /etc/audit/auditd.conf")
+                                                                cmd = os.system("curl -s https://github.com/Chrjoh88/ubuntu/blob/master/etc/audit.rules > /etc/audit/audit.rules")
+                                                                cmd = os.system("sed -i 's/arch=b64/arch=$(uname -m)/g' /etc/audit/audit.rules")
+                                                                cmd = os.system("cp /etc/audit/audit.rules /etc/audit/auditd.conf")
+								cmd = os.system("systemctl enable auditd")
+								cmd = os.system("systemctl restart auditd.service")
+							elif opcion2 == "7":
+								cmd = os.system("sed -i 's/^Checksums =.*/Checksums = sha512/' /etc/aide/aide.conf")
+								cmd = os.system("aideinit --yes")
+                                                                cmd = os.system("cp /var/lib/aide/aide.db.new /var/lib/aide/aide.db")
+                                                                cmd = os.system("curl -s https://raw.githubusercontent.com/Chrjoh88/ubuntu/master/config/aidecheck.service > /etc/systemd/system/aidecheck.service")
+                                                                cmd = os.system("curl -s https://raw.githubusercontent.com/Chrjoh88/ubuntu/master/config/aidecheck.timer > /etc/systemd/system/aidecheck.timer")
+                                                                cmd = os.system("chmod 0644 /etc/systemd/system/aidecheck.*")
+                                                                cmd = os.system("systemctl reenable aidecheck.timer")
+                                                                cmd = os.system("systemctl start aidecheck.timer")
+								cmd = os.system("systemctl daemon-reload")
+							elif opcion2 == "8":
+								cmd = os.system("sed -i 's/umask 022/umask 027/g' /etc/init.d/rc")
+								cmd = os.system("grep -q -i 'umask' '/etc/profile' 2> /dev/null; echo 'umask 027' >> /etc/profile")
+                                                                cmd = os.system("grep -q -i 'umask' '/etc/bash.bashrc' 2> /dev/null; echo 'umask 027' >> /etc/bash.bashrc")
+							elif opcion2 == "9":
+								cmd = os.system("sed -i 's/PATH=.*/PATH=\"\/usr\/local\/bin:\/usr\/bin:\/bin'/' /etc/environment")
+								cmd = os.system("curl -s https://raw.githubusercontent.com/konstruktoid/hardening/master/config/initpath.sh > /etc/profile.d/initpath.sh")
+								cmd = os.system("chown root:root /etc/profile.d/initpath.sh")
+								cmd = os.system("chmod 0644 /etc/profile.d/initpath.sh")
+							elif opcion2 == "10":
+								cmd = os.system("sed -i 's/^#KillUserProcesses=no/KillUserProcesses=1/' 	/etc/systemd/logind.conf")
+								cmd = os.system("sed -i 's/^#KillExcludeUsers=root/KillExcludeUsers=root/' 	/etc/systemd/logind.conf")
+                                                                cmd = os.system("sed -i 's/^#IdleAction=ignore/IdleAction=lock/' 		/etc/systemd/logind.conf")
+                                                                cmd = os.system("sed -i 's/^#IdleActionSec=30min/IdleActionSec=15min/' 		/etc/systemd/logind.conf")
+                                                                cmd = os.system("sed -i 's/^#RemoveIPC=yes/RemoveIPC=yes/' 			/etc/systemd/logind.conf")
+                                                                cmd = os.system("systemctl daemon-reload")
+                                                        elif opcion2 == "11":
+								cmd = os.system("sed -i 's/^#DNSSEC=.*/DNSSEC=allow-downgrade/' /etc/systemd/resolved.conf")
+								cmd = os.system("sed -i '/^hosts:/ s/files dns/files resolve dns/' /etc/nsswitch.conf")
+								cmd = os.system("systemctl daemon-reload")
+							elif opcion2 == "12":
+								cmd = os.system("sed -i 's/^CRON_DAILY_RUN=.*/CRON_DAILY_RUN='yes'/' /etc/default/rkhunter")
+                                                                cmd = os.system("sed -i 's/^APT_AUTOGEN=.*/APT_AUTOGEN='yes'/' /etc/default/rkhunter")
+                                                                cmd = os.system("rkhunter --propupd")
+							elif opcion2 == "13":
+								cmd = os.system("sed -i 's/enabled=.*/enabled=0/' /etc/default/apport")
+								cmd = os.system("systemctl mask apport.service")
+							elif opcion2 == "14":
+								cmd = os.system("sed -i 's/^#Storage=.*/Storage=none/' /etc/systemd/coredump.conf")
+								cmd = os.system("systemctl restart systemd-journald")
+							elif opcion2 == "15":
+								cmd = os.system("")
+							elif opcion2 == "16":
+								cmd = os.system("")
+							elif opcion2 == "17":
+								cmd = os.system("")
+							elif opcion2 == "18":
+								cmd = os.system("")
+							elif opcion2 == "19":
+								cmd = os.system("")
+							elif opcion2 == "20":
+								cmd = os.system("")
+                                                        elif opcion2 == "back":
+                                                                inicio()
+                                                        elif opcion2 == "gohome":
+                                                                inicio1()
+                                                        else:
+                                                                print ("\033[1;31mSorry, that was an invalid command!\033[1;m")
+
+						while opcion1 == "5":
+                                                        print ('''
+\033[1;36m***************************** Test system hardening *****************************\033[1;m
+ 1) Install all scripts                 21) Auditd
+ 2) Disablenet                          22) Disablemod
+ 3) Disablemnt                          23) Aide
+ 4) Systemdconf                         24) Rhosts
+ 5) Journalctl                          25) Users
+ 6) Timesyncd                           26) Suid
+ 7) Fstab                               27) Unmaks
+ 8) Prelink                             28) APPArmor
+ 9) Aptget                              29) Path
+10) Hosts                               30) Logindconf
+11) Logindefs                           31) Resolvedconf
+12) Sysctl                              32) Rkhunter
+13) Limits                              33) Issue
+14) Adduser                             34) Apport
+15) Rootaccess                          35) Lockroot
+16) Packages                            36) Coredump
+17) SSHDconfig                          37) Systemddelta
+18) Password                            38) Reboot
+19) Cron                                39) NULL
+20) Ctraltdel                           40) NULL
+                                                        ''')
+
+							print ("\033[1;32mInsert the number of the test to run .\n\033[1;m")
+							opcion2 = raw_input("\033[1;36mBlackfyre > \033[1;m")
+							if opcion2 == "1":
+								cmd = os.system("")
+								print (" ")
+							elif opcion2 == "2":
+								cmd = os.system("")
+								print (" ")
+							elif opcion2 == "back":
+								inicio()
+							elif opcion2 == "gohome":
+								inicio1()
+
+				inicio()
+		inicio1()
+	except KeyboardInterrupt:
+		print ("Shutdown requested...Goodbye...")
+	except Exception:
+		traceback.print_exc(file=sys.stdout)
+	sys.exit(0)
+
+if __name__ == "__main__":
+    main()
