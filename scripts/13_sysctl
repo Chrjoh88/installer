@@ -9,8 +9,7 @@ function f_sysctl {
     echo "net.ipv6.conf.$i.accept_ra_rtr_pref = 0" >> "$SYSCTL"
   done
   
-  exec /sbin/modprobe nf_conntrack hashsize=1048576
-  #echo 1048576 > /sys/module/nf_conntrack/parameters/hashsize
+  echo 1048576 > /sys/module/nf_conntrack/parameters/hashsize
 
   chmod 0600 "$SYSCTL"
   systemctl restart systemd-sysctl
