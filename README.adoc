@@ -27,6 +27,8 @@ GRUB_CMDLINE_LINUX_DEFAULT="nomodeset"
 GRUB_TERMINAL_INPUT="console serial"
 sudo update-grub
 
+script may disrupt mailman use this
+useradd -c "mailman" -s /no/shell -d /no/home -g list list
 
 Install
 curl and wget to be sure scripts running fine
